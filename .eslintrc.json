@@ -10,7 +10,23 @@
       "files": ["*.ts", "*.tsx"],
       "rules": {
         "no-unused-vars": "error",
-        "no-console": "error"
+        "no-console": "error",
+        "@typescript-eslint/consistent-type-definitions": [
+          "error",
+          "interface"
+        ],
+        "new-cap": [
+          "error",
+          {
+            "capIsNewExceptions": ["Router"]
+          }
+        ]
+      }
+    },
+    {
+      "files": ["src/**/models/*.ts"],
+      "rules": {
+        "@typescript-eslint/naming-convention": "off"
       }
     }
   ],
