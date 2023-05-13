@@ -1,4 +1,4 @@
-import { Schema } from "mongoose";
+import { Schema, model } from "mongoose";
 
 const robotSchema = new Schema({
   name: String,
@@ -10,4 +10,6 @@ const robotSchema = new Schema({
   imageUrl: String,
 });
 
-export default robotSchema;
+const Robot = model("Robot", robotSchema, "robots");
+
+export default Robot;

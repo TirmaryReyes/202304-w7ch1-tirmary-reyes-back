@@ -1,10 +1,8 @@
 import "./loadEnvironment.js";
-import express from "express";
 import createDebug from "debug";
 import mongoose from "mongoose";
 import chalk from "chalk";
-
-const app = express();
+import app from "./server/index.js";
 
 const debug = createDebug("robots-api:root");
 
