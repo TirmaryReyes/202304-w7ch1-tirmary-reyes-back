@@ -1,13 +1,19 @@
+import jwt from "jsonwebtoken";
 import { type NextFunction, type Request, type Response } from "express";
 import createDebug from "debug";
-import CustomError from "../CustomError.js";
-import jwt from "jsonwebtoken";
+import CustomError from "../../CustomError/CustomError.js";
 
-const debug = createDebug("robots-api:root:server:middlewares:authMiddleare");
+const debug = createDebug("robots-api:root:server:middlewares:authMiddleware");
 
 const secretKey = process.env.JWT_SECRET!;
 
 const auth = (req: Request, res: Response, next: NextFunction) => {
+  if (!secretKey) {
+    debug("Missing key environment variable");
+
+    process.exit(1);
+  }
+
   try {
     const authorizationHeader = req.header("Authorization");
 
@@ -18,15 +24,16 @@ const auth = (req: Request, res: Response, next: NextFunction) => {
 
     const token = authorizationHeader.replace("Bearer ", "");
 
-    if (!secretKey) {
-      debug("Missing key environment variable");
-      process.exit(1);
-    }
-
     jwt.verify(token, secretKey);
+
     next();
   } catch (error: unknown) {
-    next(error);
+    const customError =
+      (error as Error).name === "JsonWebTokenError"
+        ? new CustomError(401, "Invalid token")
+        : error;
+
+    next(customError);
   }
 };
 
