@@ -9,15 +9,15 @@ const userLogin = async (
   req: Request<
     Record<string, unknown>,
     Record<string, unknown>,
-    { username: string; password: string }
+    { userName: string; password: string }
   >,
   res: Response,
   next: NextFunction
 ) => {
   try {
-    const { username, password } = req.body;
+    const { userName: username, password } = req.body;
 
-    const user = await User.findOne({ username });
+    const user = await User.findOne({ userName: username });
 
     if (!user || !(await bcrypt.compare(password, user.password))) {
       const customError = new CustomError(401, "Wrong credentials");
@@ -27,7 +27,7 @@ const userLogin = async (
 
     const tokenPayload: JwtPayload = {
       sub: user._id.toString(),
-      name: user.username,
+      name: user.userName,
     };
 
     const token = jwt.sign(tokenPayload, process.env.JWT_SECRET!);
